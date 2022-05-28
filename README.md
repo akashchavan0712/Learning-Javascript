@@ -12,3 +12,4 @@
 ### 8) JavaScript Objects
 ### 9) JavaScript DOM
 ### 10) Hoisting, Scope, typeConversion, Variables
+### 11) JavaScript OS module operations arch(), networkInterfaces(), platform()
