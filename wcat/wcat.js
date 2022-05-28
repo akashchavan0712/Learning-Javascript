@@ -1,4 +1,5 @@
 let fs = require("fs");
+const { PassThrough } = require("stream");
 // node wcat.js filepath => displays the contents of a file in terminal
 let input = process.argv.slice(2); 
 //slice actually slices the data and skips the input;
@@ -33,10 +34,10 @@ for(let i=0; i<fileArr.length; i++)
     {
         console.log("Files Does Not Exist");
     }
+    process.exit();
 }
 
 // Now We Want To Read File Data From A File
-
 let content = "";
 for(let i = 0; i < fileArr.length; i++)
 {
@@ -44,10 +45,13 @@ for(let i = 0; i < fileArr.length; i++)
     content =  content + fileContent + "\r\n" ;
 }
 let contentArr = content.split("\r\n");
-console.table(contentArr);
+
+// console.table(contentArr);
 // Check Whether -s is present or not
 
 let isSPresent = optionsArr.includes('-s');
+let withoutNull = [];
+
 // Since The Presence Is Confirmed
 if(isSPresent)
 {
@@ -62,6 +66,80 @@ if(isSPresent)
             contentArr[i] = null;
         }
     }
+
+    // console.table(contentArr);
+    // Pushing Everything Inside The Temporary Array Except Null Values
+    for (let i = 0; i < contentArr.length; i++) 
+    {
+        if(contentArr[i] != null)
+        {
+            withoutNull.push(contentArr[i]);
+        }
+    }
+
+    // console.table(withoutNull);
+    contentArr = withoutNull;
 }
 
-console.table(contentArr);
+
+// Now We Have To Check Whether There are one or more option commands
+
+let indexOfN = optionsArr.indexOf("-n");
+let indexOfB = optionsArr.indexOf('-b');
+
+// If Index of The Given Operator is Present then returns the index;
+// IF Index of The Given Operator is not Present then returns -1;
+
+// If both -n and -b are not present
+let finalOption = "";
+if(indexOfN != -1 && indexOfB != -1)
+{
+    if(indexOfN < indexOfB){
+        finalOption = "-n";
+    }
+    else{
+        finalOption = "-b";
+    }
+}
+// If either -n || -b is present
+else{
+    if(indexOfN != -1)
+    {
+        finalOption = "-n";
+    }
+    else if(indexOfB != -1) {
+        finalOption = "-b";
+    }
+}
+
+if(finalOption == "-n")
+{
+    modifyContentbyN();
+}
+else if (finalOption == "-b")
+{
+    modifyContentbyB();
+}
+
+console.log(contentArr);
+//  Creating Two Functions for performing operation
+function modifyContentbyN()
+{
+    for (let i = 0; i < contentArr.length; i++) {
+        contentArr[i] = (i+1) + ") " + contentArr[i];
+    }
+    console.log(contentArr);
+}
+
+function modifyContentbyB()
+{
+    let count = 1;
+    for (let i = 0; i < contentArr.length; i++) 
+    {
+        if(contentArr[i] != ""){
+            contentArr[i] = count + ") " + contentArr[i];
+            count++;
+        }
+    }
+    console.log(contentArr);
+}
