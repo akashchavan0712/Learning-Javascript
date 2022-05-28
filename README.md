@@ -13,3 +13,4 @@
 ### 9) JavaScript DOM
 ### 10) Hoisting, Scope, typeConversion, Variables
 ### 11) JavaScript OS module operations arch(), networkInterfaces(), platform()
+### 12) JavaScript fs.exitsSync(), process.argv.slice(), fs.readFileSync()
